@@ -1,0 +1,8 @@
+{
+  "mojo.modularHomePath": "${env:HOME}/.modular",
+  "mojo.onSettingsChanged": "restart",
+  "terminal.integrated.env.osx": {
+    "MOJO_PYTHON_LIBRARY": "${env:HOME}/.asdf/installs/python/3.11.6/lib/libpython3.11.dylib"
+  },
+  "cmake.configureOnOpen": false
+}

@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Mojo: Current file",
+        "type": "mojo-lldb",
+        "request": "launch",
+        "mojoFile": "${file}",
+        "args": [],
+        "env": [],
+        "cwd": "${fileDirname}"
+      },
+      {
+        "name": "Mojo: Debug binary",
+        "type": "mojo-lldb",
+        "request": "launch",
+        "program": "${workspaceFolder}/<your program>",
+        "args": [],
+        "env": [],
+        "cwd": "${fileDirname}"
+      },
+      {
+        "name": "Mojo: Attach to binary",
+        "type": "mojo-lldb",
+        "request": "attach",
+        "pid": "<pid>"
+      }
+    ]
+}

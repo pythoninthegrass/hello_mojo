@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC1090,SC2206
+
+set -euo pipefail
+
+# get the root directory
+GIT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+
+if [ -n "$GIT_ROOT" ]; then
+	TLD="$(git rev-parse --show-toplevel)"
+else
+	TLD="${SCRIPT_DIR}"
+fi
+
+ENV_FILE="${TLD}/.env"
+
+# load env vars
+if [[ -f "${ENV_FILE}" ]]; then
+    source "${ENV_FILE}"
+fi
+
+# env vars
+AUTH_KEY=${AUTH_KEY:-5ca1ab1e}
+BUILDKIT=${BUILDKIT:-1}
+CE=${CE:-docker}
+DOCKERFILE=${DOCKERFILE:-Dockerfile}
+EXTRA_CAP=${EXTRA_CAP:-}
+MOJO_VER=${MOJO_VER:-0.6.1}
+NO_CACHE="false"
+ORG=${ORG:-modular}
+PULL="false"
+UNAME=$(uname -m)
+
+usage() {
+	cat <<- EOF
+		Usage: ./build-image.sh [OPTIONS]
+
+		OPTIONS
+		    --auth-key <your-auth-key>
+		        Your auth key from https://modular.ml/user/settings
+		    --use-podman
+		        Use podman instead of docker
+		    --mojo-version <version>
+		        The version of mojo to use (default: 0.6.1)
+	EOF
+}
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--auth-key)
+			AUTH_KEY="$2"
+			shift
+			;;
+		--use-podman)
+			CE=podman
+			EXTRA_CAP="--cap-add SYS_PTRACE"
+			;;
+		--mojo-version)
+			MOJO_VER="$2"
+			shift
+			;;
+		-h|--help)
+			usage
+			exit 0
+			;;
+		--*)
+			echo "Unrecognized option $1"
+			usage
+			exit 1
+			;;
+	esac
+	shift $(( $# > 0 ? 1 : 0 ))
+done
+
+build_image() {
+	echo "# Building image with ${CE}..."
+        declare -a ARGS=(
+        '--file' "${DOCKERFILE}"
+        '--build-arg' "AUTH_KEY=${AUTH_KEY}"
+        '-t' "${ORG}/mojo:${MOJO_VER}"
+    )
+    if [[ "${UNAME}" == "aarch64" ]] || [[ "${UNAME}" == "arm64" ]]; then
+        ARGS+=(--platform linux/amd64)
+    fi
+    if [[ "${BUILDKIT}" == "1" ]]; then
+        CE="${CE} buildx"
+        ARGS+=(--load)
+    fi
+    if [[ "${NO_CACHE}" == "true" ]]; then
+        ARGS+=('--no-cache')
+    fi
+    if [[ "${PULL}" == "true" ]]; then
+        ARGS+=('--pull')
+    fi
+
+    # build the image with arguments
+	${CE} build "${ARGS[@]}" .
+}
+
+# Wrap the build in a function
+build_image
+
+exit 0

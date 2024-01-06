@@ -1,0 +1,26 @@
+#!/usr/bin/env mojo
+
+from python import Python
+
+
+fn name() -> String:
+    try:
+        let input = Python.import_module('input')
+        return str(input("What is your name? "))
+    except:
+        print("Error: Python not found")
+        return "Mojo"
+
+
+fn main() -> None:
+    # let is an immutable variable
+    let hello = "Hello World!"
+    print(hello)
+
+    # var is a mutable variable
+    var name = name()
+    print("Hello", name)
+
+    # mutate the variable
+    name = "Mojo"
+    print("Hello", name)

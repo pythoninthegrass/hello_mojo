@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# shellcheck disable=SC2034
+
+cat <<- 'DESCRIPTION' >&2 > /dev/null
+	Run Mojo with MOJO_PYTHON_LIBRARY set to the current python version
+	installed by asdf
+
+	INSTALL
+	    chmod +x mojo
+	    ln -s $(pwd)/mojo ~/.local/bin/mojo
+	USAGE
+	    mojo <args>
+	SOURCE
+	    @NaokiMatsuzaki https://github.com/modularml/mojo/issues/977#issuecomment-1778240963
+	DESCRIPTION
+
+set -euo pipefail
+
+#  env vars
+[[ -n $(logname >/dev/null 2>&1) ]] && LOGGED_IN_USER=$(logname) || LOGGED_IN_USER=$(whoami)
+LOGGED_IN_HOME=$(eval echo "~${LOGGED_IN_USER}")
+BASE_DIR="${LOGGED_IN_HOME}/.asdf/installs/python"
+PYTHON_VERSION=$(asdf current python | awk '{print $2; exit}')
+MODULAR_HOME="${LOGGED_IN_HOME}/.modular"
+
+# alias var for mojo
+mojo="${MODULAR_HOME}/pkg/packages.modular.com_mojo/bin/mojo"
+
+# call mojo
+run_mojo() {
+	if [[ $# -eq 0 ]]; then
+		$mojo repl
+	else
+		$mojo "$@"
+	fi
+}
+
+# run mojo
+main() {
+	case $PYTHON_VERSION in
+		"system")
+			(cd "$PWD"; run_mojo "$@")
+			;;
+		*)
+			MOJO_PYTHON_LIBRARY=$(find "${BASE_DIR}/${PYTHON_VERSION}/lib" -name "libpython*" | head -n1)
+			export MOJO_PYTHON_LIBRARY="$MOJO_PYTHON_LIBRARY"
+			(cd "$PWD"; run_mojo "$@")
+			;;
+	esac
+}
+main "$@"
+
+exit 0

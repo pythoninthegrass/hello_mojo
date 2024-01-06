@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  mojo:
+    container_name: hello-mojo
+    platform: linux/x86_64
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      - AUTH_KEY
+    ports:
+      - 8888:8888
+    volumes:
+      - ..:/app
+    working_dir: /app
