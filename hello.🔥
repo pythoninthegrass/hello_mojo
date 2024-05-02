@@ -3,17 +3,11 @@
 fn main():
     from python import Python
 
-    # let is an immutable variable
-    let hello = "Hello World!"
-    print(hello)
-
-    # var is a mutable variable
     try:
-        let builtins = Python.import_module("builtins")
+        var builtins = Python.import_module("builtins")
         var name = str(builtins.input("What is your name? "))
-        print("Hello", name)
-        name = "World"  # mutate the variable
+        if len(name) == 0:
+            name = "World"  # mutate the variable
         print("Hello", name)
     except:
         print("Unable to import Python module 'builtins'")
-
