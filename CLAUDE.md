@@ -5,6 +5,7 @@
 Mojo is a high-performance programming language that bridges Python's ease of use with systems programming capabilities. It combines Python syntax and ecosystem with advanced features for AI, GPU programming, and high-performance computing.
 
 **Key Features:**
+
 - Python-compatible syntax and interoperability
 - Systems programming capabilities with memory safety
 - GPU programming support (NVIDIA)
@@ -15,6 +16,7 @@ Mojo is a high-performance programming language that bridges Python's ease of us
 ## Installation & Setup
 
 ### Using pip/uv
+
 ```bash
 # With pip
 pip install modular
@@ -37,6 +39,7 @@ uv add modular
 ```
 
 ### Project Setup with Dependencies
+
 ```bash
 # Add core dependencies
 uv add numpy matplotlib pandas
@@ -55,7 +58,8 @@ uv pip install -r pyproject.toml --all-extras
 ```
 
 ### Basic Project Structure
-```
+
+```text
 my-mojo-project/
 ├── main.mojo          # Entry point
 ├── mymodule.mojo      # Custom module
@@ -67,12 +71,14 @@ my-mojo-project/
 ## Language Basics
 
 ### Hello World
+
 ```mojo
 def main():
     print("Hello, Mojo! 🔥")
 ```
 
 ### Variables and Types
+
 ```mojo
 def main():
     # Implicit typing
@@ -89,6 +95,7 @@ def main():
 ```
 
 ### Functions
+
 ```mojo
 # def function (Python-like, can raise errors)
 def greet(name: String) -> String:
@@ -108,6 +115,7 @@ fn divide(a: Float64, b: Float64) raises -> Float64:
 ## Python Interoperability (Prioritized)
 
 ### Calling Python from Mojo
+
 ```mojo
 from python import Python
 
@@ -128,6 +136,7 @@ def main():
 ```
 
 ### Advanced Dependency Management
+
 ```bash
 # Add Python packages with version constraints
 uv add "numpy>=1.20,<2.0" "matplotlib>=3.5"
@@ -146,6 +155,7 @@ uv pip install -r requirements.txt
 ```
 
 ### Working with Python Objects
+
 ```mojo
 from python import Python, PythonObject
 
@@ -161,6 +171,7 @@ def process_python_data(py_obj: PythonObject):
 ```
 
 ### Calling Mojo from Python (Preview)
+
 ```mojo
 # mojo_module.mojo
 from python import PythonObject
@@ -192,6 +203,7 @@ print(mojo_module.factorial(5))  # 120
 ## Core Language Features
 
 ### Structs
+
 ```mojo
 @value  # Automatically generates lifecycle methods
 struct Point:
@@ -211,6 +223,7 @@ def main():
 ```
 
 ### Traits
+
 ```mojo
 trait Drawable:
     fn draw(self): ...
@@ -231,6 +244,7 @@ def main():
 ```
 
 ### Parameters (Compile-time)
+
 ```mojo
 fn print_n_times[count: Int](message: String):
     @parameter
@@ -242,6 +256,7 @@ def main():
 ```
 
 ### Collections
+
 ```mojo
 from collections import List, Dict, Set
 
@@ -287,6 +302,7 @@ def main():
 ## Performance Patterns
 
 ### SIMD Operations
+
 ```mojo
 def simd_example():
     # Vectorized operations
@@ -297,6 +313,7 @@ def simd_example():
 ```
 
 ### Memory Management
+
 ```mojo
 from memory import UnsafePointer
 
@@ -326,6 +343,7 @@ def main():
 ## Development Workflow with uv
 
 ### Complete Project Setup
+
 ```bash
 # Create new project with git author info
 uv init --bare --author-from git my-mojo-app
@@ -354,6 +372,7 @@ mojo main.mojo
 ```
 
 ### Code Quality with Ruff and Ty
+
 ```bash
 # Add development tools
 uv add --optional dev ruff ty
@@ -373,6 +392,7 @@ ty --watch .          # Watch mode for continuous checking
 ```
 
 ### Dependency Management Workflows
+
 ```bash
 # Export current environment to requirements.txt
 uv pip freeze > requirements.txt
@@ -393,11 +413,13 @@ uv pip install -r pyproject.toml --upgrade
 ## Best Practices
 
 ### 1. Choose the Right Function Type
+
 - Use `def` for Python-like functions that may raise errors
 - Use `fn` for systems programming with explicit error handling
 - Use `@staticmethod` for utility functions on structs
 
 ### 2. Leverage Type System
+
 ```mojo
 # Explicit typing for clarity
 fn process_data(items: List[String]) -> Dict[String, Int]:
@@ -408,6 +430,7 @@ fn process_data(items: List[String]) -> Dict[String, Int]:
 ```
 
 ### 3. Use Traits for Generic Programming
+
 ```mojo
 trait Numeric:
     fn __add__(self, other: Self) -> Self: ...
@@ -418,6 +441,7 @@ fn compute[T: Numeric](a: T, b: T) -> T:
 ```
 
 ### 4. Memory Safety
+
 ```mojo
 # Use ownership annotations
 fn process_owned(owned data: List[Int]) -> List[Int]:
@@ -433,6 +457,7 @@ fn process_borrowed(borrowed data: List[Int]) -> Int:
 ## Current Limitations & Sharp Edges
 
 ### Missing Python Features
+
 - No list/dict comprehensions yet: `[x for x in range(10)]`
 - No `lambda` functions
 - No `yield`/generators
@@ -440,6 +465,7 @@ fn process_borrowed(borrowed data: List[Int]) -> Int:
 - Limited exception hierarchy (`Error` instead of `Exception`)
 
 ### Workarounds
+
 ```mojo
 # Instead of list comprehension
 def create_squares(n: Int) -> List[Int]:
@@ -456,6 +482,7 @@ def sort_with_key():
 ```
 
 ### Type System Gotchas
+
 ```mojo
 # StringLiteral vs String behaves differently
 def example():
@@ -470,6 +497,7 @@ def example():
 ## Module Organization
 
 ### Creating Modules
+
 ```mojo
 # mathutils.mojo
 fn add(a: Int, b: Int) -> Int:
@@ -488,6 +516,7 @@ struct Vector2D:
 ```
 
 ### Using Modules
+
 ```mojo
 # main.mojo
 from mathutils import add, Vector2D
@@ -517,6 +546,7 @@ def main():
 ```
 
 ### Running Tests and Quality Checks
+
 ```bash
 # Run Mojo tests
 mojo test_*.mojo
@@ -534,6 +564,7 @@ ruff check --watch .            # Continuous linting
 ## Common Patterns
 
 ### Builder Pattern
+
 ```mojo
 @value
 struct Config:
@@ -567,6 +598,7 @@ def main():
 ```
 
 ### Resource Management with Context Managers
+
 ```mojo
 @value
 struct FileManager:
@@ -596,6 +628,7 @@ def main():
 ## uv Configuration
 
 ### pyproject.toml Example
+
 ```toml
 [project]
 name = "my-mojo-project"
@@ -634,6 +667,7 @@ build-backend = "hatchling.build"
 ```
 
 ### uv Commands Reference
+
 ```bash
 # Project creation and setup
 uv init --bare --author-from git my-project    # Create project with git author
@@ -659,6 +693,7 @@ uv pip install --upgrade                     # Update all packages
 ## Code Quality Pipeline
 
 ### Pre-commit Setup
+
 ```bash
 # Install development tools
 uv add --optional dev ruff ty pre-commit
@@ -673,6 +708,7 @@ ty .                            # Type check all files
 ```
 
 ### CI/CD Integration
+
 ```yaml
 # .github/workflows/quality.yml
 name: Code Quality
@@ -711,13 +747,13 @@ jobs:
 
 ## Getting Help
 
-- **Documentation**: https://docs.modular.com/mojo/
-- **Examples**: https://github.com/modular/modular/tree/main/examples/mojo
-- **Recipes**: https://builds.modular.com/?category=recipes
-- **Community**: Discord and Forum at https://www.modular.com/community
-- **Issues**: https://github.com/modular/modular/issues
-- **uv Documentation**: https://docs.astral.sh/uv/
-- **Ruff Documentation**: https://astral.sh/ruff
-- **Ty Documentation**: https://github.com/astral-sh/ty
+- **Documentation**: <https://docs.modular.com/mojo/>
+- **Examples**: <https://github.com/modular/modular/tree/main/examples/mojo>
+- **Recipes**: <https://builds.modular.com/?category=recipes>
+- **Community**: Discord and Forum at <https://www.modular.com/community>
+- **Issues**: <https://github.com/modular/modular/issues>
+- **uv Documentation**: <https://docs.astral.sh/uv/>
+- **Ruff Documentation**: <https://astral.sh/ruff>
+- **Ty Documentation**: <https://github.com/astral-sh/ty>
 
 Remember: Mojo is rapidly evolving. Always check the latest changelog for breaking changes and new features.
